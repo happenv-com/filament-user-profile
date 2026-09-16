@@ -62,12 +62,22 @@ abstract class MyProfileComponent extends Component implements HasActions, HasFo
         static::$sort = $sort;
     }
 
+    /**
+     * The form fields that are persisted back onto the user model.
+     *
+     * @return array<int, string>
+     */
+    protected function getOnly(): array
+    {
+        return $this->only;
+    }
+
     public function submit(): void
     {
         /** @var Model $userModel */
         $userModel = $this->user;
 
-        $data = collect($this->getForm('form')->getState())->only($this->only)->all();
+        $data = collect($this->getForm('form')->getState())->only($this->getOnly())->all();
 
         $userModel->update($data);
 

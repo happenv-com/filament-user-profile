@@ -21,6 +21,24 @@ class PersonalInfo extends MyProfileComponent
 
     protected array $only = ['name', 'email'];
 
+    protected string $avatarColumn = 'avatar_url';
+
+    /**
+     * The avatar field is only part of the form when avatars are enabled, so it
+     * is only persisted then. Without this it would be filtered out of both the
+     * form fill and the update, and an uploaded avatar would silently vanish.
+     *
+     * @return array<int, string>
+     */
+    protected function getOnly(): array
+    {
+        if (! $this->getPlugin()->hasAvatars()) {
+            return $this->only;
+        }
+
+        return [...$this->only, $this->avatarColumn];
+    }
+
     public function getTitle(): string
     {
         return __('happenv-filament-user-profile::default.profile.personal_info.heading');
@@ -40,12 +58,12 @@ class PersonalInfo extends MyProfileComponent
         /** @var Model $userModel */
         $userModel = $this->user;
         //
-        $this->getForm('form')->fill($userModel->only($this->only));
+        $this->getForm('form')->fill($userModel->only($this->getOnly()));
     }
 
     public function getAvatarUploadComponent()
     {
-        $fileUpload = FileUpload::make('avatar_url')
+        $fileUpload = FileUpload::make($this->avatarColumn)
             ->label(__('happenv-filament-user-profile::default.fields.avatar'))
             ->avatar()
             ->imagePreviewHeight('200px')

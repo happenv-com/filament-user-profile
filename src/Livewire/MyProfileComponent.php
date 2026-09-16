@@ -9,6 +9,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentView;
 use Happenv\FilamentUserProfile\UserProfilePlugin;
+use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
 
 abstract class MyProfileComponent extends Component implements HasActions, HasForms
@@ -18,6 +19,9 @@ abstract class MyProfileComponent extends Component implements HasActions, HasFo
     protected string $view = 'happenv-filament-user-profile::livewire.edit-component';
 
     public ?array $data = [];
+
+    /** @var array<int, string> */
+    protected array $only = [];
 
     public $user;
 

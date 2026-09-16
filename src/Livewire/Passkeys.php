@@ -49,8 +49,11 @@ final class Passkeys extends PasskeysComponent implements HasActions, HasSchemas
 
     public function render(): View
     {
-        return view('happenv-filament-user-profile::livewire.passkeys', data: [
-            'passkeys' => $this->currentUser()->passkeys,
+        /** @var View $view */
+        $view = view('happenv-filament-user-profile::livewire.passkeys', data: [
+            'passkeys' => $this->currentUser()->passkeys()->get(),
         ]);
+
+        return $view;
     }
 }

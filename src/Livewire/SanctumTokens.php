@@ -3,10 +3,13 @@
 namespace Happenv\FilamentUserProfile\Livewire;
 
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Get;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables;
 use Happenv\FilamentUserProfile\UserProfilePlugin;
 use Illuminate\Database\Eloquent\Builder;
@@ -114,10 +117,10 @@ class SanctumTokens extends MyProfileComponent implements Tables\Contracts\HasTa
     protected function getTableHeaderActions(): array
     {
         return [
-            Tables\Actions\Action::make('createToken')
+            Action::make('createToken')
                 ->label(__('happenv-filament-user-profile::default.profile.sanctum.create.submit.label'))
                 ->modalWidth($this->modalWidth)
-                ->form($this->getSanctumFormSchema())
+                ->schema($this->getSanctumFormSchema())
                 ->action(function ($data) {
                     $this->plainTextToken = $this->user->createToken($data['token_name'], isset($data['abilities']) ? array_values($data['abilities']) : ['*'], isset($data['expires_at']) ? Carbon::createFromFormat('Y-m-d', $data['expires_at']) : null)->plainTextToken;
                     Notification::make()
@@ -131,19 +134,19 @@ class SanctumTokens extends MyProfileComponent implements Tables\Contracts\HasTa
     // protected function getTableBulkActions(): array
     // {
     //     return [
-    //         Tables\Actions\DeleteBulkAction::make()
+    //         DeleteBulkAction::make()
     //     ];
     // }
 
     protected function getTableActions(): array
     {
         return [
-            Tables\Actions\EditAction::make('edit')
+            EditAction::make('edit')
                 ->label(__('happenv-filament-user-profile::default.profile.sanctum.update.submit.label'))
                 ->iconButton()
                 ->modalWidth($this->modalWidth)
-                ->form($this->getSanctumFormSchema(edit: true)),
-            Tables\Actions\DeleteAction::make()
+                ->schema($this->getSanctumFormSchema(edit: true)),
+            DeleteAction::make()
                 ->iconButton(),
         ];
     }

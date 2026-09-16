@@ -36,7 +36,7 @@ class MyProfilePage extends BasePage
 
     public function getSubheading(): ?string
     {
-        return __('happenv-filament-user-profile::default.profile.subheading') ?? null;
+        return __('happenv-filament-user-profile::default.profile.subheading');
     }
 
     public static function getNavigationLabel(): string

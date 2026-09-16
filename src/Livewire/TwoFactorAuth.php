@@ -31,7 +31,7 @@ final class TwoFactorAuth extends MyProfileComponent
     {
         $data = $this->getUser()->attributesToArray();
 
-        $this->form->fill($data);
+        $this->getForm('form')->fill($data);
 
     }
 

@@ -6,6 +6,10 @@ Rather than offering multiple plugin options, this package provides a streamline
 
 ## Upgrading to 3.0
 
+3.0 raises the minimum PHP version to **8.3**. The package previously declared `^8.2`, but
+its own test suite could never run there — `pestphp/pest` 4.x requires `^8.3` — so 8.2 was
+untested. The CI matrix now covers 8.3 and 8.4 only.
+
 The browser sessions component no longer depends on the abandoned `jenssegers/agent`
 (and its outdated `mobiledetect/mobiledetectlib` 2.x). It now uses the maintained fork
 [`al-saloul/agent`](https://github.com/al-saloul/agent).

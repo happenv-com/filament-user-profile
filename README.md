@@ -4,6 +4,23 @@ This package draws inspiration from [Filament Breezy](https://github.com/jeffgre
 
 Rather than offering multiple plugin options, this package provides a streamlined approach to extending and replacing components.
 
+## Upgrading to 4.0
+
+4.0 swaps the user agent parser again, this time to [`webard/agent`](https://github.com/webard/agent) — a maintained
+fork of `al-saloul/agent`, which had not been released since January 2025 and emitted a PHP 8.4 deprecation on every
+request that consumers could not suppress.
+
+```sh
+composer remove al-saloul/agent
+composer require happenv-com/filament-user-profile:^4.0
+```
+
+The namespace is unchanged, so if you extended `BrowserSessions` your `use Alsaloul\Agent\Agent;` import keeps
+working. `webard/agent` declares `"replace": {"al-saloul/agent": "*"}`, so remove the old package first — the two
+cannot be installed side by side.
+
+Nothing else changed; browser, platform and device detection behave exactly as in 3.x.
+
 ## Upgrading to 3.0
 
 3.0 raises the minimum PHP version to **8.3**. The package previously declared `^8.2`, but

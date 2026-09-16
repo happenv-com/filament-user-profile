@@ -4,6 +4,29 @@ This package draws inspiration from [Filament Breezy](https://github.com/jeffgre
 
 Rather than offering multiple plugin options, this package provides a streamlined approach to extending and replacing components.
 
+## Upgrading to 3.0
+
+The browser sessions component no longer depends on the abandoned `jenssegers/agent`
+(and its outdated `mobiledetect/mobiledetectlib` 2.x). It now uses the maintained fork
+[`al-saloul/agent`](https://github.com/al-saloul/agent).
+
+If your application requires `jenssegers/agent` only because of this package, remove it:
+
+```sh
+composer remove jenssegers/agent
+composer require happenv-com/filament-user-profile:^3.0
+```
+
+If you extended `BrowserSessions` and referenced the agent class, update the import:
+
+```diff
+-use Jenssegers\Agent\Agent;
++use Alsaloul\Agent\Agent;
+```
+
+The public API (`browser()`, `platform()`, `isDesktop()`, `isMobile()`, `isTablet()`)
+is unchanged, so no other changes are required.
+
 ## Installation
 
 To install the package, execute the following command:

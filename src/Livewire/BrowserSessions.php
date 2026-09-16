@@ -2,6 +2,7 @@
 
 namespace Happenv\FilamentUserProfile\Livewire;
 
+use Alsaloul\Agent\Agent;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms;
@@ -14,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Jenssegers\Agent\Agent;
 
 class BrowserSessions extends MyProfileComponent implements HasForms
 {

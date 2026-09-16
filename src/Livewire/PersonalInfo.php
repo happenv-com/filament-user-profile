@@ -19,7 +19,7 @@ class PersonalInfo extends MyProfileComponent
 
     public $userClass;
 
-    public array $only = ['name', 'email'];
+    protected array $only = ['name', 'email'];
 
     public function getTitle(): string
     {

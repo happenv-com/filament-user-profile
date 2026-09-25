@@ -1,5 +1,11 @@
 # Filament User Panel
 
+<div class="filament-hidden">
+
+![Filament User Profile](art/banner.png)
+
+</div>
+
 This package draws inspiration from [Filament Breezy](https://github.com/jeffgreco13/filament-breezy) but does not include two-factor authentication (2FA) functionality.
 
 Rather than offering multiple plugin options, this package provides a streamlined approach to extending and replacing components.

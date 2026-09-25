@@ -1,4 +1,4 @@
-# Filament User Panel
+# Filament User Profile
 
 <div class="filament-hidden">
 
@@ -6,7 +6,7 @@
 
 </div>
 
-This package draws inspiration from [Filament Breezy](https://github.com/jeffgreco13/filament-breezy) but does not include two-factor authentication (2FA) functionality.
+This package draws inspiration from [Filament Breezy](https://github.com/jeffgreco13/filament-breezy). It does not implement two-factor authentication itself: its Two-Factor Authentication section shows the multi-factor authentication configured on your panel.
 
 Rather than offering multiple plugin options, this package provides a streamlined approach to extending and replacing components.
 
@@ -59,7 +59,7 @@ is unchanged, so no other changes are required.
 To install the package, execute the following command:
 
 ```sh
-composer require happenv/filament-user-panel
+composer require happenv-com/filament-user-profile
 ```
 
 ## Register Plugin

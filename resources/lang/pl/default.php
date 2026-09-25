@@ -2,6 +2,11 @@
 
 return [
     'user_menu_label' => 'Mój profil',
+    'password_confirm' => [
+        'heading' => 'Potwierdź hasło',
+        'description' => 'Proszę potwierdzić swoje hasło, aby ukończyć tę akcję.',
+        'current_password' => 'Aktualne hasło',
+    ],
     'profile' => [
         'account' => 'Konto',
         'profile' => 'Profil',
@@ -36,11 +41,6 @@ return [
                 'label' => 'Zapisz',
             ],
             'notify' => 'Hasło zostało zaktualizowane',
-        ],
-        'password_confirm' => [
-            'heading' => 'Potwierdź hasło',
-            'description' => 'Proszę potwierdzić swoje hasło, aby ukończyć tę akcję.',
-            'current_password' => 'Aktualne hasło',
         ],
         'sanctum' => [
             'title' => 'Tokeny API',
@@ -77,6 +77,10 @@ return [
             'title' => 'Uwierzytelnianie dwuskładnikowe',
             'description' => 'Dodaj dodatkowe zabezpieczenie do swojego konta za pomocą uwierzytelniania dwuskładnikowego.',
         ],
+    ],
+    'clipboard' => [
+        'link' => 'Kopiuj do schowka',
+        'tooltip' => 'Skopiowano!',
     ],
     'fields' => [
         'avatar' => 'Awatar',

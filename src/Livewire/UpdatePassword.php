@@ -39,7 +39,7 @@ class UpdatePassword extends MyProfileComponent
         return $form
             ->schema([
                 Forms\Components\TextInput::make('current_password')
-                    ->label(__('happenv-filament-user-profile::default.profile.password_confirm.current_password'))
+                    ->label(__('happenv-filament-user-profile::default.password_confirm.current_password'))
                     ->required()
                     ->revealable()
                     ->password()

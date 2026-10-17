@@ -146,8 +146,11 @@
                 @if ($collapsible)
                     <x-filament::icon-button
                         color="gray"
-                        icon="heroicon-m-chevron-down"
-                        icon-alias="section.collapse-button"
+                        :icon="\Filament\Support\Icons\Heroicon::ChevronDown"
+                        :icon-alias="[
+                            \Happenv\FilamentUserProfile\View\UserProfileIconAlias::SECTION_COLLAPSE,
+                            \Filament\Support\View\SupportIconAlias::SECTION_COLLAPSE_BUTTON,
+                        ]"
                         x-on:click.stop="isCollapsed = ! isCollapsed"
                         x-bind:class="{ 'rotate-180': ! isCollapsed }"
                     />

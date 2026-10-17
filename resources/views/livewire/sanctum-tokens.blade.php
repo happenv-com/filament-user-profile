@@ -21,7 +21,8 @@
                         <div class="inline-block text-xs">
                             <x-happenv-filament-user-profile::clipboard-link :data="$plainTextToken" />
                         </div>
-                        <x-filament::button icon="heroicon-s-clipboard-document-check" size="sm" type="button"
+                        <x-filament::button :icon="\Filament\Support\Icons\Heroicon::ClipboardDocumentCheck"
+                            :icon-alias="\Happenv\FilamentUserProfile\View\UserProfileIconAlias::SANCTUM_TOKEN_COPIED" size="sm" type="button"
                             wire:click="$set('plainTextToken',null)">{{ __('happenv-filament-user-profile::default.profile.sanctum.copied.label') }}
                         </x-filament::button>
                     </div>

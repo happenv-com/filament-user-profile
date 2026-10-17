@@ -15,12 +15,14 @@
                                 <div>
                                     @if ($session->device['desktop'])
                                         <x-filament::icon
-                                            icon="heroicon-o-computer-desktop"
+                                            :icon="\Filament\Support\Icons\Heroicon::OutlinedComputerDesktop"
+                                            :alias="\Happenv\FilamentUserProfile\View\UserProfileIconAlias::BROWSER_SESSIONS_DESKTOP"
                                             class="w-8 h-8 text-gray-500 dark:text-gray-400"
                                         />
                                     @else
                                         <x-filament::icon
-                                            icon="heroicon-o-device-phone-mobile"
+                                            :icon="\Filament\Support\Icons\Heroicon::OutlinedDevicePhoneMobile"
+                                            :alias="\Happenv\FilamentUserProfile\View\UserProfileIconAlias::BROWSER_SESSIONS_MOBILE"
                                             class="w-8 h-8 text-gray-500 dark:text-gray-400"
                                         />
                                     @endif

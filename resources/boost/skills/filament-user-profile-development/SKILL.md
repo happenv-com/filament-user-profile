@@ -65,11 +65,17 @@ Gotchas:
 - `sanctum_tokens` switches itself on as soon as Sanctum is in `composer.json`, for every user of the panel. If personal tokens are not a product decision, `removeProfileComponent('sanctum_tokens')`.
 - `passkeys` is spatie's implementation (spatie's table and relying party). With Filament's MFA passkeys (`happenv-com/filament-passkeys`, built on `laravel/passkeys`) remove `passkeys`: the passkey then lives in the `two_factor_auth` section, and the spatie section would register keys the login never reads. Both packages use a `passkeys` table, so their migrations cannot both run.
 - `BrowserSessions` uses the application's default guard (`Auth::guard()`), not the panel's. On a panel with a different guard, check it before relying on it.
-- Removing a section removes it from the Livewire registry too (registration happens in `register()`, from the final list).
+- Removing a section only stops this plugin from listing, rendering and registering it. It does not unregister a Livewire name that something else registers: spatie/laravel-passkeys registers its own `passkeys` component regardless.
 
 ## Managing the list
 
 ```php
+use App\Filament\Profile\Company;
+use App\Filament\Profile\PersonalInfo as AppPersonalInfo;
+use App\Filament\Profile\Preferences;
+use Happenv\FilamentUserProfile\Livewire\PersonalInfo;
+use Happenv\FilamentUserProfile\Livewire\UpdatePassword;
+
 UserProfilePlugin::make()
     ->profileComponents([                                   // replace the whole list
         'personal_info' => PersonalInfo::class,
@@ -77,7 +83,7 @@ UserProfilePlugin::make()
     ])
     ->registerProfileComponent('preferences', Preferences::class)              // append (or overwrite the key)
     ->insertAfterProfileComponent('personal_info', 'company', Company::class)   // insert at a position
-    ->replaceProfileComponent('personal_info', App\Profile\PersonalInfo::class) // same key, your class
+    ->replaceProfileComponent('personal_info', AppPersonalInfo::class)          // same key, your class
     ->removeProfileComponent('passkeys')
     ->sanctumAbilities(['read', 'write'])     // or ['orders:read' => 'Read orders']
     ->avatars();
@@ -142,13 +148,15 @@ What the base class gives you and expects:
 - `submit()` validates the form named `form`, keeps only the keys in `$only` (via `getOnly()`), calls `$this->user->update(...)`, sends a success notification and redirects to `getRedirectUrl()` when it returns a URL. Fields outside `$only` are validated but never saved.
 - The columns in `$only` must be fillable on the user model, otherwise `update()` drops them silently.
 - Override `sendNotification()` for your own message (the default reuses the personal-info "saved" text), `getRedirectUrl()` to navigate after saving, or `submit()` entirely for anything that is not a plain update of the user (e.g. a related model).
-- `canView()` is static and evaluated on every render. Compute from the current user; never cache per class (Octane workers serve many users).
+- `canView()` only decides **visibility**: the page calls it while building its section list (`getRegisteredMyProfileComponents()`). It is not checked when a mounted section re-renders or when `submit()` runs, so it is not an authorization boundary. Repeat the permission check in `mount()` and in `submit()` (or any other mutating action) when it matters. Compute it from the current user; never cache it per class (Octane workers serve many users).
 - Read-only section: set `protected string $view` to your own Blade view (wrap it in `<x-filament::section :aside="true">` to match), leave `$only = []` and do not render a submit button.
 - Sections with actions or tables implement the matching Filament contracts themselves (`HasTable` + `InteractsWithTable`, as `SanctumTokens` does). `HasActions` / `HasForms` are already on the base class.
 
 ### Changing a built-in section
 
-Subclass it and swap it in under the same key:
+`PersonalInfo`, `UpdatePassword`, `BrowserSessions` and `SanctumTokens` can be extended. `Passkeys` and `TwoFactorAuth` are `final`: to change them, write a separate component (on `MyProfileComponent`, or spatie's `PasskeysComponent`) and register it under the key with `replaceProfileComponent()`.
+
+Subclass an extensible one and swap it in under the same key:
 
 ```php
 use Happenv\FilamentUserProfile\Livewire\PersonalInfo as BasePersonalInfo;
@@ -167,6 +175,7 @@ final class PersonalInfo extends BasePersonalInfo
     }
 }
 
+// in the panel provider, with `use App\Filament\Profile\PersonalInfo;`
 UserProfilePlugin::make()->avatars()->replaceProfileComponent('personal_info', PersonalInfo::class);
 ```
 
@@ -189,9 +198,14 @@ Another column or disk: subclass `PersonalInfo` (`$avatarColumn`, `getAvatarUplo
 ```php
 $panel->multiFactorAuthentication([
     \Filament\Auth\MultiFactor\App\AppAuthentication::make(),
-    \Happenv\FilamentPasskeys\PasskeyAuthentication::make(),   // if happenv-com/filament-passkeys is installed
+    \Happenv\FilamentPasskeys\PasskeyAuthentication::make(),
 ]);
 ```
+
+Each provider must be fully set up before it is listed, because the section calls `isEnabled($user)` and the provider's management schema while rendering:
+
+- `AppAuthentication`: the user implements `Filament\Auth\MultiFactor\App\Contracts\HasAppAuthentication` (and the columns it stores), as in Filament's MFA docs.
+- `PasskeyAuthentication` (happenv-com/filament-passkeys): the user implements `Happenv\FilamentPasskeys\Contracts\HasPasskeysAuthentication` with `InteractsWithPasskeysAuthentication`, and the `laravel/passkeys` migration has run. Otherwise `isEnabled()` throws a `LogicException` and the profile page fails.
 
 Enabled providers are listed first. Without `multiFactorAuthentication()` the section has a heading and nothing else; remove `two_factor_auth` then. A third-party 2FA Livewire component can be added with `registerProfileComponent()`.
 

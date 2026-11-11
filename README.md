@@ -161,3 +161,7 @@ This package is compatible with [stephenjude/filament-two-factor-authentication]
 UserProfilePlugin::make()
     ->registerProfileComponent('2fa', \Stephenjude\FilamentTwoFactorAuthentication\Livewire\TwoFactorAuthentication::class)
 ```
+
+## AI assistants (Laravel Boost)
+
+The package ships a [Laravel Boost](https://laravel.com/docs/boost) skill, `filament-user-profile-development`, in `resources/boost/skills/`. `php artisan boost:install` (or `boost:update`) offers it to your coding agent: registering the page and the plugin, managing the section list, writing your own section on `MyProfileComponent`, avatars, and what each built-in section needs.

@@ -18,11 +18,8 @@ jobs:
       fail-fast: true
       matrix:
         php: [8.4, 8.3]
-        laravel: [11.*, 12.*]
+        laravel: [12.*, 13.*]
         stability: [prefer-lowest, prefer-stable]
-        exclude:
-        - php: 8.4
-          laravel: 11.*
     name: Phpstan P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

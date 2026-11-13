@@ -13,6 +13,7 @@ use Happenv\FilamentUserProfile\Livewire\TwoFactorAuth;
 use Happenv\FilamentUserProfile\Livewire\UpdatePassword;
 use Happenv\FilamentUserProfile\Pages\MyProfilePage;
 use Livewire\Livewire;
+use Spatie\LaravelPasskeys\Livewire\PasskeysComponent;
 
 class UserProfilePlugin implements Plugin
 {
@@ -94,7 +95,26 @@ class UserProfilePlugin implements Plugin
 
     public function getProfileComponents(): array
     {
-        return $this->profileComponents;
+        if (static::passkeysAreAvailable()) {
+            return $this->profileComponents;
+        }
+
+        return array_filter(
+            $this->profileComponents,
+            fn (string $component): bool => $component !== Passkeys::class,
+        );
+    }
+
+    /**
+     * The `passkeys` section is built on spatie/laravel-passkeys, which is only
+     * suggested. Without it the section is neither registered nor rendered.
+     *
+     * Compared by class name on purpose: loading `Passkeys` without its spatie
+     * parent class is a fatal error.
+     */
+    public static function passkeysAreAvailable(): bool
+    {
+        return class_exists(PasskeysComponent::class);
     }
 
     public function replaceProfileComponent(string $key, string $component): static

@@ -10,6 +10,24 @@ This package draws inspiration from [Filament Breezy](https://github.com/jeffgre
 
 Rather than offering multiple plugin options, this package provides a streamlined approach to extending and replacing components.
 
+## Upgrading to 5.0
+
+5.0 no longer requires `spatie/laravel-passkeys`; it is only suggested. The `passkeys` section is built on it, so
+without the package the section is left out: it is neither registered with Livewire nor rendered, and the
+`filament-passkeys-scripts` asset is not loaded. Nothing else changed.
+
+If you use the `passkeys` section, require the package yourself so the upgrade does not remove it:
+
+```sh
+composer require spatie/laravel-passkeys
+composer require happenv-com/filament-user-profile:^5.0
+```
+
+If your passkeys are Filament multi-factor authentication passkeys (for example
+[`happenv-com/filament-passkeys`](https://github.com/happenv-com/filament-passkeys)), they are managed in the
+`two_factor_auth` section, which renders every provider of `$panel->multiFactorAuthentication([...])`. You do not
+need `spatie/laravel-passkeys` then; remove it if nothing else uses it.
+
 ## Upgrading to 4.0
 
 4.0 swaps the user agent parser again, this time to [`webard/agent`](https://github.com/webard/agent) — a maintained

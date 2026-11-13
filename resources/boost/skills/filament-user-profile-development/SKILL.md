@@ -45,7 +45,7 @@ return $panel
 
 Filament's `->profile()` gives the route and the user-menu link. `UserProfilePlugin::profilePage()` only stores a class that nothing reads, and `registerUserMenu()`, shown in the README, does not exist (calling it is a fatal error). Do not use either.
 
-Requires PHP 8.3+, Filament 4 or 5. Hard dependencies: `spatie/laravel-passkeys` (for the `passkeys` section) and `webard/agent` (user-agent parsing; it replaces `al-saloul/agent`, remove that one first).
+Requires PHP 8.3+, Filament 4 or 5. Hard dependency: `webard/agent` (user-agent parsing; it replaces `al-saloul/agent`, remove that one first). `spatie/laravel-passkeys` is only suggested: the `passkeys` section exists only when it is installed.
 
 ## The default sections
 
@@ -55,7 +55,7 @@ In this order (the order of the array is the render order; `$sort` / `getSort()`
 |---|---|---|---|
 | `personal_info` | `PersonalInfo` | always | `name`, `email` fillable on the user; with `avatars()`, an `avatar_url` column too. |
 | `update_password` | `UpdatePassword` | always | `Password::defaults()` rules; re-logs the user in after the change. |
-| `passkeys` | `Passkeys` (spatie `PasskeysComponent`) | always | spatie/laravel-passkeys fully set up: its migration, user implements `Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys` and uses `InteractsWithPasskeys`. Otherwise remove it. |
+| `passkeys` | `Passkeys` (spatie `PasskeysComponent`) | `spatie/laravel-passkeys` is installed (`UserProfilePlugin::passkeysAreAvailable()`); otherwise left out of the list even when registered explicitly | spatie/laravel-passkeys fully set up: its migration, user implements `Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys` and uses `InteractsWithPasskeys`. Otherwise remove it. |
 | `two_factor_auth` | `TwoFactorAuth` | always | Renders the management schema of every provider in `$panel->multiFactorAuthentication([...])`; empty section without MFA. |
 | `browser_sessions` | `BrowserSessions` | `session.driver` is `database` | `AuthenticateSession` in the panel middleware for "log out other sessions" to take effect. |
 | `sanctum_tokens` | `SanctumTokens` | `laravel/sanctum` is installed | User model `use HasApiTokens`. |
@@ -63,7 +63,7 @@ In this order (the order of the array is the render order; `$sort` / `getSort()`
 Gotchas:
 
 - `sanctum_tokens` switches itself on as soon as Sanctum is in `composer.json`, for every user of the panel. If personal tokens are not a product decision, `removeProfileComponent('sanctum_tokens')`.
-- `passkeys` is spatie's implementation (spatie's table and relying party). With Filament's MFA passkeys (`happenv-com/filament-passkeys`, built on `laravel/passkeys`) remove `passkeys`: the passkey then lives in the `two_factor_auth` section, and the spatie section would register keys the login never reads. Both packages use a `passkeys` table, so their migrations cannot both run.
+- `passkeys` is spatie's implementation (spatie's table and relying party). With Filament's MFA passkeys (`happenv-com/filament-passkeys`, built on `laravel/passkeys`) do not install spatie/laravel-passkeys (the section then disappears by itself), or remove `passkeys` if spatie is installed for another reason: the passkey lives in the `two_factor_auth` section, and the spatie section would register keys the login never reads. Both packages use a `passkeys` table, so their migrations cannot both run.
 - `BrowserSessions` uses the application's default guard (`Auth::guard()`), not the panel's. On a panel with a different guard, check it before relying on it.
 - Removing a section only stops this plugin from listing, rendering and registering it. It does not unregister a Livewire name that something else registers: spatie/laravel-passkeys registers its own `passkeys` component regardless.
 
@@ -249,6 +249,6 @@ it('offers no personal tokens', function () {
 - Do not register the plugin without `->profile(MyProfilePage::class, isSimple: false)`; nothing renders.
 - Do not call `registerUserMenu()` or rely on `profilePage()`.
 - Do not make `$only` public, or list a column in `$only` that the user must not change.
-- Do not leave `passkeys` on without spatie/laravel-passkeys set up, or next to `happenv-com/filament-passkeys`.
+- Do not leave `passkeys` on with spatie/laravel-passkeys installed but not set up, or next to `happenv-com/filament-passkeys`.
 - Do not leave `sanctum_tokens` on by accident just because Sanctum is installed.
 - Do not order sections with `$sort`; order the list.

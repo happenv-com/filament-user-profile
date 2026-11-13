@@ -5,6 +5,7 @@ use Filament\Panel;
 use Filament\Support\Facades\FilamentAsset;
 use Happenv\FilamentUserProfile\Livewire\Passkeys;
 use Happenv\FilamentUserProfile\UserProfilePlugin;
+use Livewire\Exceptions\ComponentNotFoundException;
 use Livewire\Livewire;
 use Spatie\LaravelPasskeys\Livewire\PasskeysComponent;
 
@@ -28,6 +29,20 @@ function profilePluginOnPanel(): UserProfilePlugin
     return $plugin;
 }
 
+/**
+ * `Livewire::exists()` is Livewire 4 only; `new()` resolves the name on 3 and 4 alike.
+ */
+function livewireResolves(string $name): bool
+{
+    try {
+        Livewire::new($name);
+    } catch (ComponentNotFoundException) {
+        return false;
+    }
+
+    return true;
+}
+
 function profileScripts(): array
 {
     return array_map(
@@ -42,7 +57,7 @@ it('offers the passkeys section when spatie/laravel-passkeys is installed', func
     expect(UserProfilePlugin::passkeysAreAvailable())->toBeTrue()
         ->and($plugin->getProfileComponents())->toHaveKey('passkeys', Passkeys::class)
         ->and($plugin->getRegisteredMyProfileComponents()->all())->toContain(Passkeys::class)
-        ->and(Livewire::exists('passkeys'))->toBeTrue()
+        ->and(livewireResolves('passkeys'))->toBeTrue()
         ->and(profileScripts())->toContain('filament-passkeys-scripts');
 })->skip(! class_exists(PasskeysComponent::class), 'spatie/laravel-passkeys is not installed.');
 
@@ -52,7 +67,7 @@ it('leaves the passkeys section out without spatie/laravel-passkeys', function (
     expect(UserProfilePlugin::passkeysAreAvailable())->toBeFalse()
         ->and($plugin->getProfileComponents())->not->toHaveKey('passkeys')
         ->and($plugin->getRegisteredMyProfileComponents()->all())->not->toContain(Passkeys::class)
-        ->and(Livewire::exists('passkeys'))->toBeFalse()
+        ->and(livewireResolves('passkeys'))->toBeFalse()
         ->and(profileScripts())->not->toContain('filament-passkeys-scripts');
 })->skip(class_exists(PasskeysComponent::class), 'spatie/laravel-passkeys is installed.');
 

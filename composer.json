@@ -20,7 +20,6 @@
         "php": "^8.3",
         "filament/filament": "^4.0|^5.0",
         "spatie/laravel-package-tools": "^1.14.0",
-        "spatie/laravel-passkeys": "^1.7.1",
         "webard/agent": "^5.0"
     },
     "require-dev": {
@@ -30,7 +29,8 @@
         "orchestra/testbench": "^10.0|^11.0",
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0",
-        "pestphp/pest-plugin-livewire": "^4.0"
+        "pestphp/pest-plugin-livewire": "^4.0",
+        "spatie/laravel-passkeys": "^1.7.1"
     },
     "autoload": {
         "psr-4": {
@@ -80,7 +80,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "suggest": {
-        "spatie/laravel-passkeys": "Adds support for passkeys in the user profile.",
+        "spatie/laravel-passkeys": "Required for the `passkeys` profile section. Without it the section is left out.",
         "laravel/sanctum": "Required for API token management in the user profile."
     }
 }

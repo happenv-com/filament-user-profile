@@ -29,6 +29,10 @@ class FilamentUserProfileServiceProvider extends PackageServiceProvider
 
     protected function getAssets(): array
     {
+        if (! UserProfilePlugin::passkeysAreAvailable()) {
+            return [];
+        }
+
         return [
             Js::make('filament-passkeys-scripts', __DIR__.'/../resources/dist/filament-passkeys.js'),
         ];

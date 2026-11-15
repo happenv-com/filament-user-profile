@@ -23,6 +23,6 @@
     },
     "dependencies": {
         "@simplewebauthn/browser": "^14.0.0",
-        "@tailwindcss/cli": "^4.3.3"
+        "@tailwindcss/cli": "^4.3.5"
     }
 }
